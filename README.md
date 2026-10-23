@@ -18,6 +18,10 @@ Portal). Every record is mapped by **place of origin** (memleket), so you can se
   North Africa, Caucasus & Asia, other).
 - Filters: war (WWI, War of Independence, Balkan Wars, 1877-78 Ottoman-Russian
   war, …), region, free-text place search, "Türkiye only" / whole-geography view.
+- **Global name search across all 108,183 records** (name / father's name / place of
+  death), relevance-ordered, ~1.3 MB compressed index loaded on first search.
+- Main detail panel sits full-width **below** the map (map -> panel), and selecting a
+  bubble auto-scrolls it into view; two balanced columns: breakdowns left, names right.
 - Detail panel per place: war / front / district breakdowns that sum exactly to
   the place total, birth-year range, and a searchable name list (official fields:
   name, father's name, birth year, war, front, place of death, rank, district).
