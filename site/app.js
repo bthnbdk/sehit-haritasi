@@ -385,6 +385,18 @@ async function globalSearch(raw){
     for (let k = 0; k < toks.length; k++) if (!blob[i].includes(toks[k])) { ok = false; break; }
     if (ok) hits.push(i);
   }
+  // relevance: exact "AD BABA" / "AD" matches first, then prefix matches, then the rest
+  const qFlat = q.replace(/\s+/g, ' ').trim();
+  const score = i => {
+    const r = IDX.rows[i];
+    const name = norm(r[0]), father = norm(r[1]), both = name + ' ' + father;
+    if (both === qFlat) return 5;
+    if (name === qFlat) return 4;
+    if (name.startsWith(toks[0]) && father && father.startsWith(toks[toks.length-1])) return 3;
+    if (name.startsWith(qFlat)) return 2;
+    return 1;
+  };
+  hits.sort((x, y) => score(y) - score(x));
   resState.hits = hits; resState.shown = 0;
   drawResults(raw.trim());
 }
@@ -412,7 +424,7 @@ function drawResults(term){
     const rowsHtml = resState.hits.slice(start, resState.shown).map(i => {
       const r = rows[i], il = P[r[3]];
       return `<tr class="resrow" data-il="${esc(il)}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td>
-        <td style="color:var(--tx)">${esc(il)}</td><td>${esc((W[r[4]]||'').replace(/\s*\(.*\)/,''))}</td><td>${esc(r[5])}</td></tr>`;
+        <td style="color:var(--tx)">${esc(il)}</td><td>${esc((W[r[4]]||'').replace(/\s*\(.*\)/,''))}</td><td>${esc(r[5]||'—')}</td></tr>`;
     }).join('');
     tb.insertAdjacentHTML('beforeend', rowsHtml);
     tb.querySelectorAll('.resrow').forEach(tr => tr.onclick = () => {

@@ -50,12 +50,14 @@ async def main():
 
         # --- global name search ---
         await pg.fill("#gq", "mehmet")
-        await pg.wait_for_timeout(1200)
+        await pg.wait_for_selector("#resBody tr", timeout=45000)
+        await pg.wait_for_timeout(600)
         n0 = await pg.evaluate("document.querySelectorAll('#resBody tr').length")
         chk("index loads + results", n0 > 10, n0)
         chk("result count label", "sonuç" in (await pg.inner_text("#pBody")).lower())
         await pg.fill("#gq", "mehmet ali")
-        await pg.wait_for_timeout(1500)
+        await pg.wait_for_function("() => document.querySelector('#pBody') && document.querySelector('#pBody').innerText.includes('SONUÇ')", timeout=45000)
+        await pg.wait_for_timeout(400)
         body = await pg.inner_text("#pBody")
         chk("multi-token search", "sonuç" in body.lower(), body[:90])
         # click a result row -> selects that place
@@ -99,7 +101,11 @@ async def main():
         ov = await mp.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
         chk("mobile no overflow", ov <= 1, ov)
         await mp.fill("#gq", "hasan")
-        await mp.wait_for_timeout(1500)
+        try:
+            await mp.wait_for_selector("#resBody tr", timeout=45000)
+        except Exception:
+            pass
+        await mp.wait_for_timeout(600)
         chk("mobile search works", await mp.evaluate("document.querySelectorAll('#resBody tr').length") > 5)
         await mp.screenshot(path=f"{OUT}/03_mobile.png", full_page=False)
 
