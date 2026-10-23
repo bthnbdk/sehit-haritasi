@@ -129,3 +129,24 @@ json.dump(summary, open(os.path.join(SITE, "data", "summary.json"), "w"), ensure
 print("mapped", len(out_places) - len(unmapped), "unmapped", len(unmapped), sum(u["n"] for u in unmapped), "recs")
 print("summary size", os.path.getsize(os.path.join(SITE, "data", "summary.json")))
 print("unmapped:", unmapped)
+
+# ---------- global search index (all records, compact) ----------
+wars_idx, places_idx = [], []
+wmap, pmap = {}, {}
+rows = []
+for r in recs:
+    def clean(v):
+        v = (v or "").strip()
+        return "" if v in ("-",) else v
+    w = clean(r.get("HARP"))
+    il = (r.get("İL") or "").strip()
+    if w not in wmap:
+        wmap[w] = len(wars_idx); wars_idx.append(w)
+    if il not in pmap:
+        pmap[il] = len(places_idx); places_idx.append(il)
+    rows.append([clean(r.get("AD SOYAD")), clean(r.get("BABA ADI")), clean(r.get("DOĞUM TARİHİ")),
+                 pmap[il], wmap[w], clean(r.get("ŞEHADET YERİ")), clean(r.get("RÜTBE")),
+                 clean(r.get("CEPHE")), clean(r.get("İLÇE"))])
+json.dump({"wars": wars_idx, "places": places_idx, "slugByName": {p["il"]: p["slug"] for p in out_places},
+           "rows": rows}, open(os.path.join(SITE, "data", "search.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+print("search rows", len(rows), "size", os.path.getsize(os.path.join(SITE, "data", "search.json")))

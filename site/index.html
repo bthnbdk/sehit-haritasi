@@ -59,10 +59,9 @@ select:focus,input:focus{border-color:#3d5470}
 #warSel{flex:1 1 220px;min-width:0}
 @media (max-width:520px){#warSel{flex:1 1 100%}}
 
-.layout{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:14px;align-items:start;margin-top:6px}
-@media (max-width:1000px){.layout{grid-template-columns:minmax(0,1fr)}}
-#map{height:min(66vh,640px);border-radius:var(--radius);border:1px solid var(--line);background:#0a0f16}
-@media (max-width:1000px){#map{height:56vh}}
+.maptop{margin-top:6px}
+#map{height:min(64vh,620px);border-radius:var(--radius);border:1px solid var(--line);background:#0a0f16}
+@media (max-width:1000px){#map{height:54vh}}
 .leaflet-container{background:#0a0f16;font-family:inherit}
 .leaflet-bar a{background:var(--bg2);color:var(--tx);border-bottom-color:var(--line)}
 .leaflet-bar a:hover{background:var(--bg3)}
@@ -78,8 +77,16 @@ select:focus,input:focus{border-color:#3d5470}
 .sizelegend .sl-row{display:flex;align-items:center;gap:9px;margin-top:6px}
 .sizelegend .sl-c{display:inline-block;border-radius:50%;background:rgba(217,83,79,.6);border:1px solid rgba(255,255,255,.55);flex:0 0 auto}
 
-.panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:0;overflow:hidden;position:sticky;top:10px}
-@media (max-width:1000px){.panel{position:static}}
+.panel{background:var(--bg2);border:1px solid var(--line);border-radius:var(--radius);padding:0;overflow:hidden}
+.mainpanel{margin-top:16px}
+.pgrid{display:grid;grid-template-columns:minmax(260px,.82fr) minmax(0,1.35fr);gap:22px;align-items:start}
+@media (max-width:900px){.pgrid{grid-template-columns:1fr;gap:14px}}
+.pcol{min-width:0}
+.resrow{cursor:pointer}
+.resrow:hover td{background:rgba(255,255,255,.04)}
+.resmark{background:rgba(232,182,76,.18);color:var(--accent);border-radius:3px}
+.leaflet-interactive{cursor:pointer}
+.rlist{max-height:420px}
 .panel .ph{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
 .panel .ph h2{margin:0;font-size:15px;letter-spacing:-.01em}
 .panel .pb{padding:14px 15px;max-height:none}
@@ -161,28 +168,28 @@ footer b{color:var(--tx2)}
       <button data-war="BALKAN SAVAŞLARI (1912-1913)" data-i18n="balkan">Balkan Savaşları</button>
     </div>
     <select id="warSel" title="Diğer savaşlar"></select>
-    <input type="search" id="q" placeholder="Memleket ara: Bursa, Selanik, Kudüs…" data-i18n-ph="searchph" style="min-width:230px">
+    <input type="search" id="q" placeholder="Memleket ara: Bursa, Selanik, Kudüs…" data-i18n-ph="searchph" style="min-width:200px">
+    <input type="search" id="gq" placeholder="İsim ara — 108.183 kayıt: ad, baba adı, şehadet yeri…" data-i18n-ph="namesearchph" style="flex:1 1 300px;min-width:200px;border-color:#3d5470">
     <button class="chip" id="btnTR" data-i18n="onlytr">Sadece Türkiye</button>
     <button class="chip" id="btnAll" data-i18n="allgeo">Tüm coğrafya</button>
     <button class="chip on" id="btnLabels" data-i18n="labels">Etiketler</button>
   </div>
   <div class="toolbar" style="margin-top:-2px" id="legend"></div>
 
-  <div class="layout">
-    <div>
-      <div id="map"></div>
-      <div class="mapnote" data-i18n="mapnote">Daire boyutu şehit sayısıyla, renk memleket bölgesiyle orantılıdır. İl koordinatları il merkezini gösterir.</div>
-    </div>
-    <aside class="panel" id="panel">
-      <div class="ph">
-        <h2 id="pTitle" data-i18n="pick">Bir memleket seçin</h2>
-        <span class="tag hide" id="pTag"></span>
-      </div>
-      <div class="pb" id="pBody">
-        <div class="empty" data-i18n="empty">Haritadan ya da aşağıdaki listelerden bir memleket seçin; savaş, cephe ve isim dökümü burada görünür.</div>
-      </div>
-    </aside>
+  <div class="maptop">
+    <div id="map"></div>
+    <div class="mapnote" data-i18n="mapnote">Daire boyutu şehit sayısıyla, renk memleket bölgesiyle orantılıdır. İl koordinatları il merkezini gösterir.</div>
   </div>
+
+  <section class="panel mainpanel" id="panel">
+    <div class="ph">
+      <h2 id="pTitle" data-i18n="pick">Bir memleket seçin</h2>
+      <span class="tag hide" id="pTag"></span>
+    </div>
+    <div class="pb" id="pBody">
+      <div class="empty" data-i18n="empty">Haritadan bir memleket seçin ya da yukarıdaki isim aramasını kullanın; döküm burada görünür.</div>
+    </div>
+  </section>
 
   <section class="block">
     <h3 data-i18n="top20">En çok şehit veren 20 memleket</h3>
