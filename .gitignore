@@ -1,0 +1,9 @@
+raw/
+records.json
+per_file.json
+scrape.out
+scrape.log
+shots/
+qa/__pycache__/
+__pycache__/
+.netlify/
