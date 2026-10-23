@@ -47,6 +47,8 @@ async def main():
         await pg.mouse.click(box["x"] + target["x"], box["y"] + target["y"])
         await pg.wait_for_timeout(1500)
         chk("small bubble click (off-centre)", (await pg.inner_text("#pTitle")).strip() in ("RİZE", "RIZE"), await pg.inner_text("#pTitle"))
+        vis = await pg.evaluate("() => { const r=document.querySelector('#panel').getBoundingClientRect(); return {top:Math.round(r.top), vh:window.innerHeight}; }")
+        chk("panel scrolls into view after click", vis["top"] >= -2 and vis["top"] < vis["vh"] * 0.4, vis)
 
         # --- global name search ---
         await pg.fill("#gq", "mehmet")

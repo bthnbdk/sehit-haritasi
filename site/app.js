@@ -275,6 +275,8 @@ async function select(p, fly){
   if (fly) flyTo(p);
 
   document.getElementById('pTitle').textContent = p.il;
+  const back = document.getElementById('pBack');
+  if (back) back.classList.remove('hide');
   const tag = document.getElementById('pTag');
   tag.classList.remove('hide'); tag.textContent = S.regionLabels[p.region] || p.region; tag.style.borderColor = REGION_COLOR[p.region];
 
@@ -315,6 +317,7 @@ async function select(p, fly){
       </div>
     </div>`;
 
+  if (fly) scrollPanelIntoView();
   const recs = await loadRecs(p);
   let list = recs, shown = 0;
   const draw = reset => {
@@ -527,6 +530,8 @@ function wire(){
     clearTimeout(qt);
     qt = setTimeout(() => { state.q = ev.target.value.trim(); refreshMap(); renderTable(); }, 160);
   };
+  const back = document.getElementById('pBack');
+  if (back) back.onclick = () => document.querySelector('.maptop').scrollIntoView({behavior:'smooth', block:'start'});
   document.getElementById('gq').oninput = ev => {
     clearTimeout(gt);
     const v = ev.target.value;
@@ -559,6 +564,14 @@ function wire(){
     search: q => globalSearch(q), idxLoaded: () => !!IDX
   };
 }
+function scrollPanelIntoView(){
+  const el = document.getElementById('panel');
+  if (!el) return;
+  const top = el.getBoundingClientRect().top;
+  if (top > 40 && top < window.innerHeight - 120) return; // already comfortably visible
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function renderEmpty(){
   document.getElementById('pTitle').textContent = T('pick');
   document.getElementById('pTag').classList.add('hide');

@@ -184,7 +184,10 @@ footer b{color:var(--tx2)}
   <section class="panel mainpanel" id="panel">
     <div class="ph">
       <h2 id="pTitle" data-i18n="pick">Bir memleket seçin</h2>
-      <span class="tag hide" id="pTag"></span>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span class="tag hide" id="pTag"></span>
+        <button class="chip hide" id="pBack" title="Haritaya dön">↑ Harita</button>
+      </div>
     </div>
     <div class="pb" id="pBody">
       <div class="empty" data-i18n="empty">Haritadan bir memleket seçin ya da yukarıdaki isim aramasını kullanın; döküm burada görünür.</div>
